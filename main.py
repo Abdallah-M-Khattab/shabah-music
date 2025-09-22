@@ -17,13 +17,15 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 @bot.event
 async def on_ready():
     print(f"✅ Logged in as {bot.user}")
+
     await wavelink.NodePool.create_node(
         bot=bot,
-        host=LAVALINK_HOST,
-        port=LAVALINK_PORT,
-        password=LAVALINK_PASSWORD,
-        https=False
+        host=os.getenv("LAVALINK_HOSTNAME"),
+        port=int(os.getenv("LAVALINK_PORT")),
+        password=os.getenv("LAVALINK_PASSWORD"),
+        https=True
     )
+
 
 @bot.command()
 async def join(ctx):
@@ -72,3 +74,4 @@ async def leave(ctx):
         await ctx.send("👋 Left the channel.")
 
 bot.run(TOKEN)
+
