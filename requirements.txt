@@ -1,2 +1,2 @@
 discord.py==2.6.2
-yt-dlp
+yt-dlp==2025.9.15
