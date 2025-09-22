@@ -17,12 +17,14 @@ bot = commands.Bot(command_prefix=PREFIX, intents=intents)
 @bot.event
 async def on_ready():
     print(f"{bot.user} is ready!")
-    await wavelink.NodePool.create_node(
-        bot=bot,
-        host="wss://shabah-music-bot3-production.up.railway.app",
-        port=443,
-        password="youshallnotpass",
+
+    # إنشاء اتصال مع Lavalink
+    node: wavelink.Node = wavelink.Node(
+        uri="wss://shabah-music-bot3-production.up.railway.app:443",
+        password="youshallnotpass"
     )
+    await wavelink.NodePool.connect(client=bot, nodes=[node])
+
 
 
 @bot.command()
@@ -72,6 +74,7 @@ async def leave(ctx):
         await ctx.send("👋 Left the channel.")
 
 bot.run(TOKEN)
+
 
 
 
