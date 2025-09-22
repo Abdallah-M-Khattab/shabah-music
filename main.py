@@ -19,7 +19,7 @@ async def on_ready():
     print(f"{bot.user} is ready!")
     await wavelink.NodePool.create_node(
         bot=bot,
-        host="shabah-music-bot3-production.up.railway.app",
+        host="wss://shabah-music-bot3-production.up.railway.app",
         port=443,
         password="youshallnotpass",
         https=True
@@ -73,5 +73,6 @@ async def leave(ctx):
         await ctx.send("👋 Left the channel.")
 
 bot.run(TOKEN)
+
 
 
