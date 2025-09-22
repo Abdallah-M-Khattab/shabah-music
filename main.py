@@ -22,7 +22,6 @@ async def on_ready():
         host="wss://shabah-music-bot3-production.up.railway.app",
         port=443,
         password="youshallnotpass",
-        https=True
     )
 
 
@@ -73,6 +72,7 @@ async def leave(ctx):
         await ctx.send("👋 Left the channel.")
 
 bot.run(TOKEN)
+
 
 
 
