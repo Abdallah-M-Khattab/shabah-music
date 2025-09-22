@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
-import youtube_dl
+from yt_dlp import YoutubeDL
 import os
 
 intents = discord.Intents.default()
@@ -10,25 +10,16 @@ intents.voice_states = True
 
 bot = commands.Bot(command_prefix='-', intents=intents)
 
-ytdl_format_options = {
+ydl_opts = {
     'format': 'bestaudio/best',
-    'outtmpl': 'downloads/%(extractor)s-%(id)s-%(title)s.%(ext)s',
-    'restrictfilenames': True,
     'noplaylist': True,
-    'nocheckcertificate': True,
-    'ignoreerrors': False,
-    'logtostderr': False,
     'quiet': True,
-    'no_warnings': True,
     'default_search': 'auto',
-    'source_address': '0.0.0.0'
 }
 
 ffmpeg_options = {
     'options': '-vn'
 }
-
-ytdl = youtube_dl.YoutubeDL(ytdl_format_options)
 
 if not os.path.exists("downloads"):
     os.mkdir("downloads")
@@ -66,16 +57,18 @@ async def play(ctx, *, search: str):
 
     voice_client = ctx.voice_client
 
-    try:
-        info = ytdl.extract_info(search, download=False)
-        url = info['url']
-    except Exception as e:
-        await ctx.send("Could not find the video.")
-        return
+    with YoutubeDL(ydl_opts) as ydl:
+        try:
+            info = ydl.extract_info(search, download=False)
+            url = info['url']
+            title = info.get('title', 'Unknown')
+        except Exception:
+            await ctx.send("Could not find the video.")
+            return
 
     voice_client.stop()
     voice_client.play(discord.FFmpegPCMAudio(url, **ffmpeg_options))
-    await ctx.send(f'Now playing: {info.get("title", "Unknown")}')
+    await ctx.send(f'Now playing: {title}')
 
 @bot.command()
 async def pause(ctx):
